@@ -1,4 +1,4 @@
-import "./App.css";
+
 import { ContextProvider } from "./context/Context";
 
 import Header from "./components/layout/Header";
