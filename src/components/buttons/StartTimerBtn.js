@@ -12,10 +12,9 @@ export default function StartTimerBtn({handleTakePicture, setIsCounting, count, 
       const timer = count > 0 && setInterval(() => setCount(count - 1), 1000);
       if (count <= 0 && isCounting) {
         handleTakePicture();
-        console.log('take picture');
       }
       return () => clearInterval(timer);
-  }, [count, setCount]);
+  }, [count, setCount, handleTakePicture, isCounting]);
 
   return (
     <button className="btn" onClick={handleStartTimer}>

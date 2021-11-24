@@ -11,6 +11,7 @@ import { getLocation } from "../../services/geolocation";
 import StartTimerBtn from "../buttons/StartTimerBtn";
 import RotateCameraBtn from "../buttons/RotateCameraBtn";
 import TurnCameraOffBtn from "../buttons/TurnCameraOffBtn";
+import SingleImage from "../images/SingleImage";
 
 export default function CameraControllers() {
   const [context, updateContext] = useContext(Context);
@@ -38,6 +39,9 @@ export default function CameraControllers() {
   const [count, setCount] = useState(3);
   const [isCounting, setIsCounting] = useState(false);
 
+  //Modal
+  const [showModal, setShowModal] = useState(false);
+
   useEffect(() => {
     if (navigator.mediaDevices) {
       setBrowserSupport(true);
@@ -64,6 +68,10 @@ export default function CameraControllers() {
       gallery: newGallery,
     });
   }
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
 
   const handleVideoOn = () => assignStream(videoRef.current);
 
@@ -171,7 +179,6 @@ export default function CameraControllers() {
             isCounting={isCounting}
             setIsCounting={setIsCounting}
             count={count}
-            isCounting={isCounting}
             setCount={setCount}
           />
         </div>
@@ -223,6 +230,11 @@ export default function CameraControllers() {
           <canvas ref={canvasRef} width="320" height="240"></canvas>
         </li>
       </ul>
+      {showModal && (
+        <SingleImage
+          closeModal={closeModal}
+        ></SingleImage>
+      )}
     </>
   );
 }
