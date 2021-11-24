@@ -9,6 +9,5 @@ export async function fetchDataByUrl(url) {
 
 export async function getLocation(latitude, longitude) {
   const fetchURL = `https://geocode.xyz/${latitude},${longitude}?geoit=json&auth=${process.env.REACT_APP_GEO_AUTH}`
-  return fetchDataByUrl(fetchURL)
+  return await fetchDataByUrl(fetchURL)
 }
-

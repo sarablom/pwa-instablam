@@ -28,8 +28,6 @@ export default function CameraControllers() {
   const [latPos, setLatPos] = useState(null);
   const [lonPos, setLonPos] = useState(null);
   const [timeStamp, setTimeStamp] = useState(null);
-  const [city, setCity] = useState("");
-  const [country, setCountry] = useState("");
   const [updateLocation, setUpdateLocation] = useState(false);
 
   //Countdown
@@ -48,16 +46,19 @@ export default function CameraControllers() {
   }, []);
 
   useEffect(() => {
+    // if( !updateLocation ) return
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition((pos) => {
         setLatPos(pos.coords.latitude);
         setLonPos(pos.coords.longitude);
         setTimeStamp(pos.timestamp);
+        setUpdateLocation(false);
       });
     } else {
       console.log("No location");
     }
   }, [updateLocation]);
+
 
   function handleDeletePhoto(id) {
     const newGallery = gallery.filter((item) => item.id !== id);
@@ -91,6 +92,7 @@ export default function CameraControllers() {
   }
 
   async function getAddress(lat, lon) {
+    console.log('getaddress', lat, lon);
     const data = await getLocation(lat, lon);
 
     return { city: data.city, country: data.country, error: data.error };
@@ -101,16 +103,15 @@ export default function CameraControllers() {
     let id = Math.floor(Math.random() * 10000);
     let time = new Date(timeStamp).toLocaleString();
 
-    const address = getAddress(latPos, lonPos);
+    const address = await getAddress(latPos, lonPos);
 
-    const printAddress = async () => {
-      const a = await address;
-      setCity(a.city);
-      setCountry(a.country);
-      setErrorMessage(a.error);
+    const printCity = async () => {
+      return address.city;
     };
 
-    printAddress();
+    const printCountry = async () => {
+      return address.country;
+    };
 
     try {
       canvasRef.current
@@ -128,13 +129,13 @@ export default function CameraControllers() {
       const newImgObj = {
         id: id,
         src: photo,
-        city: city,
-        country: country,
+        city: (await printCity()) || "Location unknown",
+        country: (await printCountry()) || "Location unknown",
         time: time,
       };
 
       updateContext({
-        gallery: [...gallery, newImgObj],
+        gallery: [newImgObj, ...gallery],
       });
 
       setIsCounting(false);
@@ -219,7 +220,7 @@ export default function CameraControllers() {
                     <RiMapPinLine /> {item.city}, {item.country}
                   </p>
                 )}
-                {!item.city && <p>Unknown location</p>}
+                {/* {!item.city && <p>Unknown location</p>} */}
                 <button
                   className="btn"
                   onClick={() => handleDeletePhoto(item.id)}
