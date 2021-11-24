@@ -8,7 +8,7 @@ import {
   MdDownload,
 } from "react-icons/md";
 import { getLocation } from "../../services/geolocation";
-// import StartTimerBtn from "../buttons/StartTimerBtn";
+import StartTimerBtn from "../buttons/StartTimerBtn";
 import RotateCameraBtn from "../buttons/RotateCameraBtn";
 import TurnCameraOffBtn from "../buttons/TurnCameraOffBtn";
 
@@ -25,7 +25,6 @@ export default function CameraControllers() {
   const [browserSupport, setBrowserSupport] = useState(false);
   const [cameraOn, setCameraOn] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  //const [, setImageGallery] = useState([]);
   const gallery = context.gallery;
 
   //Geolocation
@@ -167,13 +166,14 @@ export default function CameraControllers() {
             setIsCounting={setIsCounting}
           />
           <RotateCameraBtn facing={facing} setFacing={setFacing} />
-          {/* <StartTimerBtn
+          <StartTimerBtn
             handleTakePicture={handleTakePicture}
             isCounting={isCounting}
             setIsCounting={setIsCounting}
             count={count}
+            isCounting={isCounting}
             setCount={setCount}
-          /> */}
+          />
         </div>
       )}
 

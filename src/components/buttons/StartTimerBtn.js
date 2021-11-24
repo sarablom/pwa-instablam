@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { MdOutlineTimer3 } from "react-icons/md";
 
-export default function StartTimerBtn({handleTakePicture, setIsCounting, count, setCount}) {
+export default function StartTimerBtn({handleTakePicture, setIsCounting, count, isCounting, setCount}) {
 
   function handleStartTimer() {
     setIsCounting(true);
@@ -9,12 +9,12 @@ export default function StartTimerBtn({handleTakePicture, setIsCounting, count, 
   }
 
   useEffect(() => {
-    const timer = count > 0 && setInterval(() => setCount(count - 1), 1000);
-    if (count <= 0) {
-      //handleTakePicture();
-      console.log('take picture');
-    }
-    return () => clearInterval(timer);
+      const timer = count > 0 && setInterval(() => setCount(count - 1), 1000);
+      if (count <= 0 && isCounting) {
+        handleTakePicture();
+        console.log('take picture');
+      }
+      return () => clearInterval(timer);
   }, [count, setCount]);
 
   return (
