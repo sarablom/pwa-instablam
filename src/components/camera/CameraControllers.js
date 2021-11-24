@@ -2,8 +2,8 @@ import { useRef, useContext, useState, useEffect } from "react";
 // import { Link } from "react-router-dom";
 import { Context } from "../../context/Context";
 import { RiCameraFill } from "react-icons/ri";
+import { FaPlay } from "react-icons/fa";
 import {
-  MdFiberManualRecord,
   MdDeleteForever,
   MdDownload,
 } from "react-icons/md";
@@ -11,7 +11,7 @@ import { getLocation } from "../../services/geolocation";
 import StartTimerBtn from "../buttons/StartTimerBtn";
 import RotateCameraBtn from "../buttons/RotateCameraBtn";
 import TurnCameraOffBtn from "../buttons/TurnCameraOffBtn";
-import SingleImage from "../images/SingleImage";
+// import SingleImage from "../images/SingleImage";
 
 export default function CameraControllers() {
   const [context, updateContext] = useContext(Context);
@@ -40,7 +40,7 @@ export default function CameraControllers() {
   const [isCounting, setIsCounting] = useState(false);
 
   //Modal
-  const [showModal, setShowModal] = useState(false);
+  // const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     if (navigator.mediaDevices) {
@@ -50,18 +50,6 @@ export default function CameraControllers() {
     }
   }, []);
 
-  useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition((pos) => {
-        setLatPos(pos.coords.latitude);
-        setLonPos(pos.coords.longitude);
-        setTimeStamp(pos.timestamp);
-      });
-    } else {
-      console.log("No location");
-    }
-  }, [latPos, lonPos]);
-
   function handleDeletePhoto(id) {
     const newGallery = gallery.filter((item) => item.id !== id);
     updateContext({
@@ -69,9 +57,9 @@ export default function CameraControllers() {
     });
   }
 
-  const closeModal = () => {
-    setShowModal(false);
-  };
+  // const closeModal = () => {
+  //   setShowModal(false);
+  // };
 
   const handleVideoOn = () => assignStream(videoRef.current);
 
@@ -145,6 +133,18 @@ export default function CameraControllers() {
     }
   };
 
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        setLatPos(pos.coords.latitude);
+        setLonPos(pos.coords.longitude);
+        setTimeStamp(pos.timestamp);
+      });
+    } else {
+      console.log("No location");
+    }
+  }, []);
+
   return (
     <>
       {!browserSupport && <p>{errorMessage}</p>}
@@ -157,7 +157,7 @@ export default function CameraControllers() {
         <div className="btn-container">
           {browserSupport && (
             <button className="btn" onClick={handleVideoOn}>
-              <MdFiberManualRecord className="icon" />
+              <FaPlay className="icon" />
             </button>
           )}
         </div>
@@ -190,7 +190,7 @@ export default function CameraControllers() {
         </p>
       )}
       <>
-        <h2>Image Gallery</h2>
+        {gallery.length > 0 && <h2>Image Gallery</h2>}
 
         <ul className="img-container">
           {gallery &&
@@ -230,11 +230,11 @@ export default function CameraControllers() {
           <canvas ref={canvasRef} width="320" height="240"></canvas>
         </li>
       </ul>
-      {showModal && (
+      {/* {showModal && (
         <SingleImage
           closeModal={closeModal}
         ></SingleImage>
-      )}
+      )} */}
     </>
   );
 }
