@@ -178,12 +178,12 @@ export default function CameraControllers() {
           <TurnCameraOffBtn
             turnCameraOff={turnCameraOff}
           />
-          <RotateCameraBtn
+          {window.innerWidth <= 800 && <RotateCameraBtn
             facing={facing}
             setFacing={setFacing}
             handleVideoOn={handleVideoOn}
             turnCameraOff={turnCameraOff}
-          />
+          />}
           <StartTimerBtn
             handleTakePicture={handleTakePicture}
             isCounting={isCounting}
