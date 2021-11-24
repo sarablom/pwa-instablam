@@ -1,12 +1,9 @@
 import { useRef, useContext, useState, useEffect } from "react";
 // import { Link } from "react-router-dom";
 import { Context } from "../../context/Context";
-import { RiCameraFill } from "react-icons/ri";
+import { RiCameraFill, RiMapPinLine } from "react-icons/ri";
 import { FaPlay } from "react-icons/fa";
-import {
-  MdDeleteForever,
-  MdDownload,
-} from "react-icons/md";
+import { MdDeleteForever, MdDownload, MdAccessTime } from "react-icons/md";
 import { getLocation } from "../../services/geolocation";
 import StartTimerBtn from "../buttons/StartTimerBtn";
 import RotateCameraBtn from "../buttons/RotateCameraBtn";
@@ -15,7 +12,6 @@ import TurnCameraOffBtn from "../buttons/TurnCameraOffBtn";
 
 export default function CameraControllers() {
   const [context, updateContext] = useContext(Context);
-  // Komponent - anropa handleVideoOn från JSX
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   // const linkRef = useRef(null);
@@ -34,6 +30,7 @@ export default function CameraControllers() {
   const [timeStamp, setTimeStamp] = useState(null);
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
+  const [updateLocation, setUpdateLocation] = useState(false);
 
   //Countdown
   const [count, setCount] = useState(3);
@@ -49,6 +46,18 @@ export default function CameraControllers() {
       setErrorMessage("Your browser doesn't support video streaming");
     }
   }, []);
+
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        setLatPos(pos.coords.latitude);
+        setLonPos(pos.coords.longitude);
+        setTimeStamp(pos.timestamp);
+      });
+    } else {
+      console.log("No location");
+    }
+  }, [updateLocation]);
 
   function handleDeletePhoto(id) {
     const newGallery = gallery.filter((item) => item.id !== id);
@@ -88,6 +97,7 @@ export default function CameraControllers() {
   }
 
   const handleTakePicture = async () => {
+    setUpdateLocation(true);
     let id = Math.floor(Math.random() * 10000);
     let time = new Date(timeStamp).toLocaleString();
 
@@ -133,17 +143,14 @@ export default function CameraControllers() {
     }
   };
 
-  useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition((pos) => {
-        setLatPos(pos.coords.latitude);
-        setLonPos(pos.coords.longitude);
-        setTimeStamp(pos.timestamp);
-      });
-    } else {
-      console.log("No location");
-    }
-  }, []);
+  function turnCameraOff() {
+    if (!stream) return;
+
+    let tracks = stream.getTracks();
+    tracks.forEach((track) => track.stop());
+    setCameraOn(false);
+    setIsCounting(false);
+  }
 
   return (
     <>
@@ -169,11 +176,14 @@ export default function CameraControllers() {
             <RiCameraFill className="icon" />
           </button>
           <TurnCameraOffBtn
-            stream={stream}
-            setCameraOn={setCameraOn}
-            setIsCounting={setIsCounting}
+            turnCameraOff={turnCameraOff}
           />
-          <RotateCameraBtn facing={facing} setFacing={setFacing} />
+          <RotateCameraBtn
+            facing={facing}
+            setFacing={setFacing}
+            handleVideoOn={handleVideoOn}
+            turnCameraOff={turnCameraOff}
+          />
           <StartTimerBtn
             handleTakePicture={handleTakePicture}
             isCounting={isCounting}
@@ -201,10 +211,12 @@ export default function CameraControllers() {
                   alt="Gallery item"
                   className="picture-taken"
                 />
-                <p>{item.time}</p>
+                <p>
+                  <MdAccessTime /> {item.time}
+                </p>
                 {item.city && (
                   <p>
-                    {item.city} in {item.country}
+                    <RiMapPinLine /> {item.city}, {item.country}
                   </p>
                 )}
                 {!item.city && <p>Unknown location</p>}
@@ -215,10 +227,10 @@ export default function CameraControllers() {
                   <MdDeleteForever className="small-icon" />
                 </button>
 
-                  <a href={item.src} download>
-                <button className="btn">
-                  <MdDownload className="small-icon" />
-                </button>
+                <a href={item.src} download>
+                  <button className="btn">
+                    <MdDownload className="small-icon" />
+                  </button>
                 </a>
               </li>
             ))}

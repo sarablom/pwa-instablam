@@ -1,15 +1,6 @@
 import { RiCameraOffFill } from "react-icons/ri";
 
-export default function TurnCameraOffBtn({stream, setCameraOn, setIsCounting}) {
-
-  function turnCameraOff() {
-    if (!stream) return;
-
-    let tracks = stream.getTracks();
-    tracks.forEach((track) => track.stop());
-    setCameraOn(false);
-    setIsCounting(false);
-  }
+export default function TurnCameraOffBtn({ turnCameraOff }) {
 
   return (
     <button className="btn" onClick={turnCameraOff}>
