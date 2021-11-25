@@ -38,6 +38,16 @@ export default function CameraControllers() {
   // const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
+    if (JSON.parse(localStorage.getItem("gallery"))) {
+      let newItemsArray = JSON.parse(localStorage.getItem("gallery"))
+
+      updateContext({
+        gallery: newItemsArray,
+      });
+    }
+  }, []);
+
+  useEffect(() => {
     if (navigator.mediaDevices) {
       setBrowserSupport(true);
     } else {
@@ -65,6 +75,7 @@ export default function CameraControllers() {
     updateContext({
       gallery: newGallery,
     });
+    localStorage.setItem('gallery', JSON.stringify(newGallery));
   }
 
   // const closeModal = () => {
@@ -98,6 +109,7 @@ export default function CameraControllers() {
   }
 
   const handleTakePicture = async () => {
+    setIsCounting(false);
     setCount(3);
     setUpdateLocation(true);
 
@@ -135,7 +147,8 @@ export default function CameraControllers() {
         gallery: [newImgObj, ...gallery],
       });
 
-      setIsCounting(false);
+      localStorage.setItem('gallery', JSON.stringify([newImgObj, ...gallery]));
+
     } catch (error) {
       console.log("Cant take picture", error);
     }
