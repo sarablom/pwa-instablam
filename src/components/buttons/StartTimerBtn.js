@@ -13,14 +13,13 @@ export default function StartTimerBtn({handleTakePicture, setIsCounting, count, 
 	}, [])
 
   useEffect(() => {
-      const timer = count > 0 && setInterval(() => setCount(count - 1), 1000);
+    const timer = count > 0 && setInterval(() => setCount(count - 1), 1000);
       
-      if (count <= 0 && isCounting) {
+      if (count === 0 && isCounting) {
         handleTakePicture(); 
-      }
-
-      if (count <= 0 && isCounting && canUse) {
-        showNotificationWithData();
+        if (count === 0 && canUse) {
+          showNotificationWithData();
+        }
       }
 
       return () => clearInterval(timer);

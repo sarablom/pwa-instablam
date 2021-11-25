@@ -92,16 +92,14 @@ export default function CameraControllers() {
   }
 
   async function getAddress(lat, lon) {
-    console.log('getaddress', lat, lon);
     const data = await getLocation(lat, lon);
 
     return { city: data.city, country: data.country, error: data.error };
   }
 
   const handleTakePicture = async () => {
+    setCount(3);
     setUpdateLocation(true);
-    let id = Math.floor(Math.random() * 10000);
-    let time = new Date(timeStamp).toLocaleString();
 
     const address = await getAddress(latPos, lonPos);
 
@@ -123,15 +121,14 @@ export default function CameraControllers() {
           canvasRef.current.width,
           canvasRef.current.height
         );
-      const photo = canvasRef.current.toDataURL("image/jpeg");
-
+    
       //Object send to context
       const newImgObj = {
-        id: id,
-        src: photo,
-        city: (await printCity()) || "Location unknown",
-        country: (await printCountry()) || "Location unknown",
-        time: time,
+        id: Math.floor(Math.random() * 10000),
+        src: canvasRef.current.toDataURL("image/jpeg"),
+        city: (await printCity()) || "City unknown",
+        country: (await printCountry()) || "Country unknown",
+        time: new Date(timeStamp).toLocaleString(),
       };
 
       updateContext({
@@ -220,7 +217,6 @@ export default function CameraControllers() {
                     <RiMapPinLine /> {item.city}, {item.country}
                   </p>
                 )}
-                {/* {!item.city && <p>Unknown location</p>} */}
                 <button
                   className="btn"
                   onClick={() => handleDeletePhoto(item.id)}
