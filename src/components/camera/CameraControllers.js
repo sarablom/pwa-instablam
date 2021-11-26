@@ -1,5 +1,4 @@
 import { useRef, useContext, useState, useEffect } from "react";
-// import { Link } from "react-router-dom";
 import { Context } from "../../context/Context";
 import { RiCameraFill, RiMapPinLine } from "react-icons/ri";
 import { FaPlay } from "react-icons/fa";
@@ -8,13 +7,11 @@ import { getLocation } from "../../services/geolocation";
 import StartTimerBtn from "../buttons/StartTimerBtn";
 import RotateCameraBtn from "../buttons/RotateCameraBtn";
 import TurnCameraOffBtn from "../buttons/TurnCameraOffBtn";
-// import SingleImage from "../images/SingleImage";
 
 export default function CameraControllers() {
   const [context, updateContext] = useContext(Context);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
-  // const linkRef = useRef(null);
 
   //Video stream
   const [facing, setFacing] = useState("user");
@@ -34,12 +31,9 @@ export default function CameraControllers() {
   const [count, setCount] = useState(3);
   const [isCounting, setIsCounting] = useState(false);
 
-  //Modal
-  // const [showModal, setShowModal] = useState(false);
-
   useEffect(() => {
     if (JSON.parse(localStorage.getItem("gallery"))) {
-      let newItemsArray = JSON.parse(localStorage.getItem("gallery"))
+      let newItemsArray = JSON.parse(localStorage.getItem("gallery"));
 
       updateContext({
         gallery: newItemsArray,
@@ -56,7 +50,6 @@ export default function CameraControllers() {
   }, []);
 
   useEffect(() => {
-    // if( !updateLocation ) return
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition((pos) => {
         setLatPos(pos.coords.latitude);
@@ -69,18 +62,13 @@ export default function CameraControllers() {
     }
   }, [updateLocation]);
 
-
   function handleDeletePhoto(id) {
     const newGallery = gallery.filter((item) => item.id !== id);
     updateContext({
       gallery: newGallery,
     });
-    localStorage.setItem('gallery', JSON.stringify(newGallery));
+    localStorage.setItem("gallery", JSON.stringify(newGallery));
   }
-
-  // const closeModal = () => {
-  //   setShowModal(false);
-  // };
 
   const handleVideoOn = () => assignStream(videoRef.current);
 
@@ -105,6 +93,7 @@ export default function CameraControllers() {
   async function getAddress(lat, lon) {
     const data = await getLocation(lat, lon);
 
+    console.log(data);
     return { city: data.city, country: data.country, error: data.error };
   }
 
@@ -133,7 +122,7 @@ export default function CameraControllers() {
           canvasRef.current.width,
           canvasRef.current.height
         );
-    
+
       //Object send to context
       const newImgObj = {
         id: Math.floor(Math.random() * 10000),
@@ -147,8 +136,7 @@ export default function CameraControllers() {
         gallery: [newImgObj, ...gallery],
       });
 
-      localStorage.setItem('gallery', JSON.stringify([newImgObj, ...gallery]));
-
+      localStorage.setItem("gallery", JSON.stringify([newImgObj, ...gallery]));
     } catch (error) {
       console.log("Cant take picture", error);
     }
@@ -186,15 +174,15 @@ export default function CameraControllers() {
           <button className="btn" onClick={handleTakePicture}>
             <RiCameraFill className="icon" />
           </button>
-          <TurnCameraOffBtn
-            turnCameraOff={turnCameraOff}
-          />
-          {window.innerWidth <= 800 && <RotateCameraBtn
-            facing={facing}
-            setFacing={setFacing}
-            handleVideoOn={handleVideoOn}
-            turnCameraOff={turnCameraOff}
-          />}
+          <TurnCameraOffBtn turnCameraOff={turnCameraOff} />
+          {window.innerWidth <= 800 && (
+            <RotateCameraBtn
+              facing={facing}
+              setFacing={setFacing}
+              handleVideoOn={handleVideoOn}
+              turnCameraOff={turnCameraOff}
+            />
+          )}
           <StartTimerBtn
             handleTakePicture={handleTakePicture}
             isCounting={isCounting}
@@ -206,9 +194,10 @@ export default function CameraControllers() {
       )}
 
       {isCounting && (
-        <p>
-          Taking picture in <span className="animation">{count}</span>
-        </p>
+        <>
+          <p className="countdown">Taking picture in</p>
+          <p className="animation">{count}</p>
+        </>
       )}
       <>
         {gallery.length > 0 && <h2>Image Gallery</h2>}
@@ -252,11 +241,6 @@ export default function CameraControllers() {
           <canvas ref={canvasRef} width="320" height="240"></canvas>
         </li>
       </ul>
-      {/* {showModal && (
-        <SingleImage
-          closeModal={closeModal}
-        ></SingleImage>
-      )} */}
     </>
   );
 }
