@@ -13,7 +13,7 @@ export default function RotateCameraBtn({ facing, setFacing, turnCameraOff, hand
   }
 
   return (
-    <button className="btn" onClick={changeFacing}>
+    <button className="btn" aria-label="Rotate camera" onClick={changeFacing}>
       <RiCameraSwitchFill className="icon" />
     </button>
   );

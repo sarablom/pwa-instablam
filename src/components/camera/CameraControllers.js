@@ -162,7 +162,7 @@ export default function CameraControllers() {
       {!cameraOn && (
         <div className="btn-container">
           {browserSupport && (
-            <button className="btn" onClick={handleVideoOn}>
+            <button className="btn" aria-label="Turn camera on" onClick={handleVideoOn}>
               <FaPlay className="icon" />
             </button>
           )}
@@ -171,7 +171,7 @@ export default function CameraControllers() {
 
       {cameraOn && (
         <div className="btn-container">
-          <button className="btn" onClick={handleTakePicture}>
+          <button className="btn" aria-label="Take photo" onClick={handleTakePicture}>
             <RiCameraFill className="icon" />
           </button>
           <TurnCameraOffBtn turnCameraOff={turnCameraOff} />
@@ -220,14 +220,15 @@ export default function CameraControllers() {
                   </p>
                 )}
                 <button
+                  aria-label="Delete this photo"
                   className="btn"
                   onClick={() => handleDeletePhoto(item.id)}
                 >
                   <MdDeleteForever className="small-icon" />
                 </button>
 
-                <a href={item.src} download>
-                  <button className="btn">
+                <a alt="Download this picture" href={item.src} download>
+                  <button className="btn" aria-label="Download this photo">
                     <MdDownload className="small-icon" />
                   </button>
                 </a>

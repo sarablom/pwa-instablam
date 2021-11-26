@@ -35,7 +35,7 @@ export default function StartTimerBtn({handleTakePicture, setIsCounting, count, 
   }
 
   return (
-    <button className="btn" onClick={handleStartTimer}>
+    <button className="btn" aria-label="Start 3 seconds timer to take photo" onClick={handleStartTimer}>
       <MdOutlineTimer3 className="icon" />
     </button>
   );
