@@ -8,4 +8,4 @@ nmp run build
 
 ### Deployed at
 
-https://instablam-instablam.surge.sh/
+https://pwa-instablam.surge.sh/
