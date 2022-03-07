@@ -10,6 +10,5 @@ export async function fetchDataByUrl(url) {
 export async function getLocation(latitude, longitude) {
   const fetchURL = `https://geocode.xyz/${latitude},${longitude}?geoit=json&auth=304512200627251254779x59553`
   const data = await fetchDataByUrl(fetchURL);
-  console.log(data);
   return data;
 }

@@ -91,7 +91,6 @@ export default function CameraControllers() {
   }
 
   async function getAddress(lat, lon) {
-    console.log(lat, lon);
     const data = await getLocation(lat, lon);
     return { city: data.city, country: data.country, error: data.error };
   }
