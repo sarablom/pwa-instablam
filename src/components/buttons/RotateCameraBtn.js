@@ -1,6 +1,6 @@
 import { RiCameraSwitchFill } from "react-icons/ri";
 
-export default function RotateCameraBtn({ facing, setFacing, turnCameraOff, handleVideoOn }) {
+export default function RotateCameraBtn({ facing, setFacing, turnCameraOff, handleTurnCameraOn }) {
 
   function changeFacing() {
     if (facing === "user") {
@@ -9,7 +9,7 @@ export default function RotateCameraBtn({ facing, setFacing, turnCameraOff, hand
       setFacing("user");
     }
     turnCameraOff();
-    handleVideoOn();
+    handleTurnCameraOn();
   }
 
   return (
