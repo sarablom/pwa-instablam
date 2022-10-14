@@ -1,9 +1,5 @@
-import { printCity, printCountry } from "./positionHelpers";
-
 export function handleDeletePhoto(id, gallery) {
     const newGallery = gallery.filter(item => item.id !== id);
-    localStorage.setItem("gallery", JSON.stringify(newGallery));
-
     return newGallery;
 }
 
@@ -45,10 +41,8 @@ export const takePicture = async (
         return {
             id: Math.floor(Math.random() * 10000),
             src: canvas.toDataURL("image/jpeg"),
-            city: (await printCity(currentLocation.city)) || "City unknown",
-            country:
-                (await printCountry(currentLocation.country)) ||
-                "Country unknown",
+            city: currentLocation.city || "City unknown",
+            country: currentLocation.country || "Country unknown",
             time: new Date(timeStamp).toLocaleString(),
         };
     } catch (error) {
