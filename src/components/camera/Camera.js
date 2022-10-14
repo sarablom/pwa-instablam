@@ -9,7 +9,7 @@ import {
     turnCameraOn,
     takePicture,
 } from "../../utils/cameraHelpers";
-import { getAddress } from "../../utils/positionHelpers";
+import { getLocation } from "../../services/geolocation";
 
 function Camera({
     setCameraOn,
@@ -44,7 +44,10 @@ function Camera({
 
     useEffect(() => {
         const fetch = async () => {
-            const address = await getAddress(latPos, lonPos);
+            const address = await getLocation(latPos, lonPos);
+            if (!address) {
+                return;
+            }
 
             setCurrentLocation(address);
         };
@@ -60,12 +63,11 @@ function Camera({
     const handleTurnCameraOn = () => {
         const currentStream = turnCameraOn(video, facing);
         setCameraOn(true);
-        console.log({ currentStream });
         setStream(currentStream);
     };
 
-    const handleTakePicture = () => {
-        const newImgObj = takePicture(
+    const handleTakePicture = async () => {
+        const newImgObj = await takePicture(
             canvas,
             video,
             currentLocation,
