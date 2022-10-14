@@ -3,11 +3,11 @@ import { Context } from "../../context/Context";
 import { handleDeletePhoto } from "../../utils/cameraHelpers";
 import { MdDeleteForever } from "react-icons/md";
 
-function DeleteButton({ item }) {
+function DeleteButton({ id }) {
     const [context, updateContext] = useContext(Context);
 
     const onClickHandler = () => {
-        const newGallery = handleDeletePhoto(item.id, context.gallery);
+        const newGallery = handleDeletePhoto(id, context.gallery);
         localStorage.setItem("gallery", JSON.stringify(newGallery));
         updateContext({
             gallery: newGallery,

@@ -3,21 +3,21 @@ import { RiMapPinLine } from "react-icons/ri";
 
 import DeleteButton from "../buttons/DeleteButton";
 
-function GalleryItem({ item }) {
+function GalleryItem({ item: { src, time, city, country, id } }) {
     return (
         <li className="img-item">
-            <img src={item.src} alt="Gallery item" className="picture-taken" />
+            <img src={src} alt="Gallery item" className="picture-taken" />
             <p>
-                <MdAccessTime /> {item.time}
+                <MdAccessTime /> {time}
             </p>
-            {item.city && (
+            {city && (
                 <p>
-                    <RiMapPinLine /> {item.city}, {item.country}
+                    <RiMapPinLine /> {city}, {country}
                 </p>
             )}
-            <DeleteButton item={item} />
+            <DeleteButton id={id} />
 
-            <a alt="Download this picture" href={item.src} download>
+            <a alt="Download this picture" href={src} download>
                 <button className="btn" aria-label="Download this photo">
                     <MdDownload className="small-icon" />
                 </button>
