@@ -1,86 +1,84 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Context } from "../../context/Context";
 import { RiCameraFill } from "react-icons/ri";
 import { getLocation } from "../../services/geolocation";
 
-export default function TakePictureBtn({ timeStamp, latPos, lonPos, canvasRef, videoRef, setIsCounting, setImageGallery }) {
-  const [context, updateContext] = useContext(Context);
-  const [city, setCity] = useState("");
-  const [country, setCountry] = useState("");
+export default function TakePictureBtn({
+    timeStamp,
+    latPos,
+    lonPos,
+    canvasRef,
+    videoRef,
+    setIsCounting,
+    setImageGallery,
+}) {
+    const [context, updateContext] = useContext(Context);
+    const [city, setCity] = useState("");
+    const [country, setCountry] = useState("");
 
-  async function getAddress(lat, lon) {
-    console.log(lat, lon);
-    const data = await getLocation(lat, lon);
+    useEffect(() => {
+        const printAddress = async () => {
+            return await getLocation(latPos, lonPos);
+        };
 
-    return { city: data.city, country: data.country };
-  }
+        const location = printAddress();
+        setCity(location.city);
+        setCountry(location.country);
+    }, [latPos, lonPos]);
 
-  const handleTakePicture = async () => {
-    let id = Math.floor(Math.random() * 10000);
-    let timestamp = new Date(timeStamp);
-    let time = timestamp.toLocaleString();
-
-    const address = getAddress(latPos, lonPos);
-
-    const printAddress = async () => {
-      const a = await address;
-      setCity(a.city);
-      setCountry(a.country);
+    const constructNewGalleryItem = (id, photo) => {
+        return (
+            <li key={id} className="img-item">
+                <img src={photo} alt="Gallery item" className="takenPicture" />
+                <p>{new Date(timeStamp).toLocaleString()}</p>
+                <p>
+                    {city} in {country}
+                </p>
+            </li>
+        );
     };
 
-    printAddress();
+    const handleTakePicture = async () => {
+        try {
+            canvasRef.current
+                .getContext("2d")
+                .drawImage(
+                    videoRef.current,
+                    0,
+                    0,
+                    canvasRef.current.width,
+                    canvasRef.current.height
+                );
+            const photo = canvasRef.current.toDataURL("image/jpeg");
+            const id = Math.floor(Math.random() * 10000);
 
-    try {
-      canvasRef.current
-        .getContext("2d")
-        .drawImage(
-          videoRef.current,
-          0,
-          0,
-          canvasRef.current.width,
-          canvasRef.current.height
-        );
-      const photo = canvasRef.current.toDataURL("image/jpeg");
+            const newImgObj = {
+                id,
+                src: photo,
+                latitude: latPos,
+                longitude: lonPos,
+                city,
+                country,
+                time: new Date(timeStamp).toLocaleString(),
+            };
 
-      console.log(photo);
+            updateContext({
+                gallery: [...context.gallery, newImgObj],
+            });
 
-      const jsxString = (
-        <li key={id} className="img-item">
-          <img src={photo} alt="Gallery item" className="takenPicture" />
-          <p>{time}</p>
-          <p>
-            {city} in {country}
-          </p>
-        </li>
-      );
+            setImageGallery(imageGallery => [
+                constructNewGalleryItem(id, photo),
+                ...imageGallery,
+            ]);
+            setIsCounting(false);
+        } catch (error) {
+            console.log("Cant take picture", error);
+        }
+    };
 
-      //Object send to database and/or context
-      const newImgObj = {
-        id: id,
-        src: photo,
-        latitude: latPos,
-        longitude: lonPos,
-        city: city,
-        country: country,
-        time: timeStamp,
-      };
-
-      console.log(newImgObj);
-
-      updateContext({
-        gallery: [...context.gallery, newImgObj],
-      });
-
-      setImageGallery((imageGallery) => [jsxString, ...imageGallery]);
-      setIsCounting(false);
-    } catch (error) {
-      console.log("Cant take picture", error);
-    }
-  };
-
-  return (
-    <button className="btn" onClick={handleTakePicture}>
-      <RiCameraFill className="icon" />
-    </button>
-  );
+    return (
+        <button className="btn" onClick={handleTakePicture}>
+            <RiCameraFill className="icon" />
+        </button>
+    );
 }
