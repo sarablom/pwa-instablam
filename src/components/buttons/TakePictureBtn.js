@@ -77,7 +77,11 @@ export default function TakePictureBtn({
     };
 
     return (
-        <button className="btn" onClick={handleTakePicture}>
+        <button
+            className="btn"
+            aria-label="Take photo"
+            onClick={handleTakePicture}
+        >
             <RiCameraFill className="icon" />
         </button>
     );
