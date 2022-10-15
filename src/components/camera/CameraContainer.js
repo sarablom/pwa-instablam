@@ -16,6 +16,7 @@ export default function CameraContainer() {
     const [browserSupport, setBrowserSupport] = useState(false);
     const [cameraOn, setCameraOn] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [stream, setStream] = useState(null);
 
     //Countdown
     const [count, setCount] = useState(3);
@@ -28,7 +29,7 @@ export default function CameraContainer() {
                 gallery: newItemsArray,
             });
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -43,7 +44,11 @@ export default function CameraContainer() {
         <>
             {!browserSupport && <p>{errorMessage}</p>}
 
-            <video ref={videoRef} className="display-camera" playsInline />
+            <video
+                ref={videoRef}
+                className={cameraOn ? "display-camera" : "hidden"}
+                playsInline
+            />
 
             {!cameraOn && (
                 <div className="btn-container">
@@ -52,6 +57,7 @@ export default function CameraContainer() {
                             video={videoRef.current}
                             facing={facing}
                             setCameraOn={setCameraOn}
+                            setStream={setStream}
                         />
                     )}
                 </div>
@@ -68,6 +74,7 @@ export default function CameraContainer() {
                     setCount={setCount}
                     isCounting={isCounting}
                     canvas={canvasRef.current}
+                    stream={stream}
                 />
             )}
 
