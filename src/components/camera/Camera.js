@@ -3,13 +3,9 @@ import { Context } from "../../context/Context";
 import StartTimerBtn from "../buttons/StartTimerBtn";
 import RotateCameraBtn from "../buttons/RotateCameraBtn";
 import TurnCameraOffBtn from "../buttons/TurnCameraOffBtn";
-import { RiCameraFill } from "react-icons/ri";
-import {
-    turnCameraOff,
-    turnCameraOn,
-    takePicture,
-} from "../../utils/cameraHelpers";
+import { turnCameraOff, takePicture } from "../../utils/cameraHelpers";
 import { getLocation } from "../../services/geolocation";
+import TakePictureBtn from "../buttons/TakePictureBtn";
 
 function Camera({
     setCameraOn,
@@ -21,9 +17,11 @@ function Camera({
     setCount,
     isCounting,
     canvas,
+    stream,
+    setStream,
 }) {
     const [context, updateContext] = useContext(Context);
-    const [stream, setStream] = useState(null);
+
     const [latPos, setLatPos] = useState(null);
     const [lonPos, setLonPos] = useState(null);
     const [timeStamp, setTimeStamp] = useState(null);
@@ -60,12 +58,6 @@ function Camera({
         setIsCounting(false);
     };
 
-    const handleTurnCameraOn = () => {
-        const currentStream = turnCameraOn(video, facing);
-        setCameraOn(true);
-        setStream(currentStream);
-    };
-
     const handleTakePicture = async () => {
         const newImgObj = await takePicture(
             canvas,
@@ -88,20 +80,15 @@ function Camera({
 
     return (
         <div className="btn-container">
-            <button
-                className="btn"
-                aria-label="Take photo"
-                onClick={handleTakePicture}
-            >
-                <RiCameraFill className="icon" />
-            </button>
+            <TakePictureBtn />
             <TurnCameraOffBtn turnCameraOff={handleTurnCameraOff} />
             {window.innerWidth <= 800 && (
                 <RotateCameraBtn
                     facing={facing}
                     setFacing={setFacing}
-                    handleTurnCameraOn={handleTurnCameraOn}
+                    video={video}
                     turnCameraOff={turnCameraOff}
+                    setStream={setStream}
                 />
             )}
             <StartTimerBtn
