@@ -20,11 +20,11 @@ export async function turnCameraOn(videoElement, facing) {
     }
 }
 
-export function turnCameraOff(stream) {
+export async function turnCameraOff(stream) {
     if (!stream) return;
 
-    let tracks = stream.getTracks();
-    tracks.forEach(track => track.stop());
+    let track = await stream.getTracks()[0];
+    track.stop();
 }
 
 export const takePicture = async (
