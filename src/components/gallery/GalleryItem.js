@@ -1,7 +1,8 @@
-import { MdDownload, MdAccessTime } from "react-icons/md";
+import { MdAccessTime } from "react-icons/md";
 import { RiMapPinLine } from "react-icons/ri";
 
 import DeleteButton from "../buttons/DeleteButton";
+import DownloadButton from "../buttons/DownloadButton";
 
 function GalleryItem({ item: { src, time, city, country, id } }) {
     return (
@@ -15,13 +16,13 @@ function GalleryItem({ item: { src, time, city, country, id } }) {
                     <RiMapPinLine /> {city}, {country}
                 </p>
             )}
-            <DeleteButton id={id} />
+            <div className="btn-container">
+                <DeleteButton id={id} />
 
-            <a alt="Download this picture" href={src} download>
-                <button className="btn" aria-label="Download this photo">
-                    <MdDownload className="small-icon" />
-                </button>
-            </a>
+                <a alt="Download this picture" href={src} download>
+                    <DownloadButton />
+                </a>
+            </div>
         </li>
     );
 }
