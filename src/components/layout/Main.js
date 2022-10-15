@@ -1,9 +1,9 @@
-import CameraControllers from "../camera/CameraControllers";
+import CameraContainer from "../camera/CameraContainer";
 
 export default function Main() {
   return (
     <main>
-      <CameraControllers />
+      <CameraContainer />
     </main>
   );
 }
