@@ -6,7 +6,7 @@ import Counter from "../gallery/Counter";
 import Camera from "./Camera";
 import TurnCameraOnBtn from "../buttons/TurnCameraOnBtn";
 
-export default function CameraControllers() {
+export default function CameraContainer() {
     const [context, updateContext] = useContext(Context);
     const videoRef = useRef(null);
     const canvasRef = useRef(null);
@@ -28,6 +28,7 @@ export default function CameraControllers() {
                 gallery: newItemsArray,
             });
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
