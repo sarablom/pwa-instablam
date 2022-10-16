@@ -3,7 +3,7 @@ import { Context } from "../../context/Context";
 import StartTimerBtn from "../buttons/StartTimerBtn";
 import RotateCameraBtn from "../buttons/RotateCameraBtn";
 import TurnCameraOffBtn from "../buttons/TurnCameraOffBtn";
-import { turnCameraOff, takePicture } from "../../utils/cameraHelpers";
+import { takePicture } from "../../utils/cameraHelpers";
 import { getLocation } from "../../services/geolocation";
 import TakePictureBtn from "../buttons/TakePictureBtn";
 import ErrorMessage from "../ErrorMessage";
@@ -56,18 +56,6 @@ function Camera({
         fetch();
     }, [latPos, lonPos]);
 
-    const handleTurnCameraOff = () => {
-        const cameraOff = turnCameraOff(stream);
-        if (cameraOff) {
-            setCameraOn(false);
-            setIsCounting(false);
-        } else {
-            setTimeout(() => {
-                <ErrorMessage message="Could not turn camera off" />;
-            }, "5000");
-        }
-    };
-
     const handleTakePicture = async () => {
         const newImgObj = await takePicture(
             canvas,
@@ -91,13 +79,16 @@ function Camera({
     return (
         <div className="btn-container">
             <TakePictureBtn />
-            <TurnCameraOffBtn turnCameraOff={handleTurnCameraOff} />
+            <TurnCameraOffBtn
+                stream={stream}
+                setCameraOn={setCameraOn}
+                setIsCounting={setIsCounting}
+            />
             {window.innerWidth <= 800 && (
                 <RotateCameraBtn
                     facing={facing}
                     setFacing={setFacing}
                     video={video}
-                    turnCameraOff={turnCameraOff}
                     setStream={setStream}
                 />
             )}

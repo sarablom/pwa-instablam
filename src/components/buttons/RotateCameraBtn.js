@@ -1,11 +1,10 @@
 import { RiCameraSwitchFill } from "react-icons/ri";
-import { turnCameraOn } from "../../utils/cameraHelpers";
+import { turnCameraOn, turnCameraOff } from "../../utils/cameraHelpers";
 import ErrorMessage from "../ErrorMessage";
 
 export default function RotateCameraBtn({
     facing,
     setFacing,
-    turnCameraOff,
     video,
     setStream,
 }) {
