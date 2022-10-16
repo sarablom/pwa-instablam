@@ -5,6 +5,7 @@ import GalleryItem from "../gallery/GalleryItem";
 import Counter from "../gallery/Counter";
 import Camera from "./Camera";
 import TurnCameraOnBtn from "../buttons/TurnCameraOnBtn";
+import ErrorMessage from "../ErrorMessage";
 
 export default function CameraContainer() {
     const [context, updateContext] = useContext(Context);
@@ -15,7 +16,6 @@ export default function CameraContainer() {
     const [facing, setFacing] = useState("user");
     const [browserSupport, setBrowserSupport] = useState(false);
     const [cameraOn, setCameraOn] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
     const [stream, setStream] = useState(null);
 
     //Countdown
@@ -35,15 +35,19 @@ export default function CameraContainer() {
     useEffect(() => {
         if (navigator.mediaDevices) {
             setBrowserSupport(true);
-        } else {
-            setErrorMessage("Your browser doesn't support video streaming");
-        }
+            return;
+        } 
+        const timer = setTimeout(() => {
+            return <ErrorMessage message="Your browser doesn't support video streaming" />;
+        }, "5000");
+
+        return () => {
+            clearTimeout(timer);
+        };        
     }, []);
 
     return (
         <>
-            {!browserSupport && <p>{errorMessage}</p>}
-
             <video
                 ref={videoRef}
                 className={cameraOn ? "display-camera" : "hidden"}
