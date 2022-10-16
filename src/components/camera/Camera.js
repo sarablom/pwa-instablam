@@ -25,17 +25,13 @@ function Camera({
 
     const [latPos, setLatPos] = useState(null);
     const [lonPos, setLonPos] = useState(null);
-    const [timeStamp, setTimeStamp] = useState(null);
     const [currentLocation, setCurrentLocation] = useState(null);
     const gallery = context.gallery;
+    const timeStamp = new Date();
 
     useEffect(() => {
         if ("geolocation" in navigator) {
-            navigator.geolocation.getCurrentPosition(pos => {
-                setLatPos(pos.coords.latitude);
-                setLonPos(pos.coords.longitude);
-                setTimeStamp(pos.timestamp);
-            });
+            setCoords();
         } else {
             console.log("No location");
             setTimeout(() => {
@@ -48,13 +44,29 @@ function Camera({
         const fetch = async () => {
             const address = await getLocation(latPos, lonPos);
             if (!address) {
-                return;
+                setTimeout(() => {
+                    <ErrorMessage message="Could not set location" />;
+                }, "5000");
             }
 
             setCurrentLocation(address);
         };
         fetch();
     }, [latPos, lonPos]);
+
+    const setCoords = () => {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(pos => {
+                setLatPos(pos.coords.latitude);
+                setLonPos(pos.coords.longitude);
+            });
+        } else {
+            console.log("No location");
+            setTimeout(() => {
+                <ErrorMessage message="Could not set location" />;
+            }, "5000");
+        }
+    };
 
     const handleTakePicture = async () => {
         const newImgObj = await takePicture(
@@ -64,21 +76,28 @@ function Camera({
             timeStamp
         );
 
-        updateContext({
-            gallery: [newImgObj, ...gallery],
-        });
+        if (newImgObj) {
+            updateContext({
+                gallery: [newImgObj, ...gallery],
+            });
 
-        localStorage.setItem(
-            "gallery",
-            JSON.stringify([newImgObj, ...gallery])
-        );
-        setIsCounting(false);
-        setCount(3);
+            localStorage.setItem(
+                "gallery",
+                JSON.stringify([newImgObj, ...gallery])
+            );
+            setIsCounting(false);
+            setCount(3);
+        } else {
+            console.log("No location");
+            setTimeout(() => {
+                <ErrorMessage message="Could not take picture" />;
+            }, "5000");
+        }
     };
 
     return (
         <div className="btn-container">
-            <TakePictureBtn />
+            <TakePictureBtn handleTakePicture={handleTakePicture} />
             <TurnCameraOffBtn
                 stream={stream}
                 setCameraOn={setCameraOn}
