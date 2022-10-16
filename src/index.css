@@ -28,13 +28,18 @@ body {
     width: 100%;
 }
 
-header {
+header,
+footer {
     background-color: var(--box-bg-color);
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 7.5rem;
+}
+
+.footer-text {
+    font-size: 1.2rem;
 }
 
 main {
@@ -130,6 +135,7 @@ h2 {
     grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
     gap: 0.5rem;
     list-style-type: none;
+    margin-bottom: 48px;
 }
 
 .img-item {
