@@ -32,24 +32,28 @@ function Camera({
     useEffect(() => {
         if ("geolocation" in navigator) {
             setCoords();
-        } else {
-            console.log("No location");
-            setTimeout(() => {
-                <ErrorMessage message="Could not set location" />;
-            }, "5000");
+            return;
         }
+
+        const timer = setTimeout(() => {
+            return <ErrorMessage message="Could not set location" />;
+        }, "5000");
+
+        return () => {
+            clearTimeout(timer);
+        };
     }, []);
 
     useEffect(() => {
         const fetch = async () => {
             const address = await getLocation(latPos, lonPos);
-            if (!address) {
-                setTimeout(() => {
-                    <ErrorMessage message="Could not set location" />;
-                }, "5000");
+            if (address.city || address.country) {
+                setCurrentLocation(address);
+                return;
             }
-
-            setCurrentLocation(address);
+            setTimeout(() => {
+                return <ErrorMessage message="Could not set location" />;
+            }, "5000");
         };
         fetch();
     }, [latPos, lonPos]);
@@ -63,7 +67,7 @@ function Camera({
         } else {
             console.log("No location");
             setTimeout(() => {
-                <ErrorMessage message="Could not set location" />;
+                return <ErrorMessage message="Could not set location" />;
             }, "5000");
         }
     };
