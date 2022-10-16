@@ -154,7 +154,14 @@ h2 {
 /* Error-message */
 
 .error-message {
-    width: 100px;
+    position: absolute;
+    top: calc(7.5rem + 20px);
+    right: 20px;
+    width: 200px;
     height: 100px;
-    border: 1px dashed var(--primary-color);
+    border: 2px dashed var(--primary-color);
+    border-radius: 4px;
+    padding: 16px;
+    font-size: 1.3rem;
+    font-weight: 700;
 }

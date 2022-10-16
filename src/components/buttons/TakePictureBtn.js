@@ -2,6 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import { Context } from "../../context/Context";
 import { RiCameraFill } from "react-icons/ri";
 import { getLocation } from "../../services/geolocation";
+import ErrorMessage from "../ErrorMessage";
 
 export default function TakePictureBtn({
     timeStamp,
@@ -73,6 +74,9 @@ export default function TakePictureBtn({
             setIsCounting(false);
         } catch (error) {
             console.log("Cant take picture", error);
+            setTimeout(() => {
+                <ErrorMessage message="Could not take picture" />;
+            }, "5000");
         }
     };
 

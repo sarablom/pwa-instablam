@@ -6,6 +6,7 @@ import TurnCameraOffBtn from "../buttons/TurnCameraOffBtn";
 import { turnCameraOff, takePicture } from "../../utils/cameraHelpers";
 import { getLocation } from "../../services/geolocation";
 import TakePictureBtn from "../buttons/TakePictureBtn";
+import ErrorMessage from "../ErrorMessage";
 
 function Camera({
     setCameraOn,
@@ -37,6 +38,9 @@ function Camera({
             });
         } else {
             console.log("No location");
+            setTimeout(() => {
+                <ErrorMessage message="Could not set location" />;
+            }, "5000");
         }
     }, []);
 
@@ -53,9 +57,15 @@ function Camera({
     }, [latPos, lonPos]);
 
     const handleTurnCameraOff = () => {
-        turnCameraOff(stream);
-        setCameraOn(false);
-        setIsCounting(false);
+        const cameraOff = turnCameraOff(stream);
+        if (cameraOff) {
+            setCameraOn(false);
+            setIsCounting(false);
+        } else {
+            setTimeout(() => {
+                <ErrorMessage message="Could not turn camera off" />;
+            }, "5000");
+        }
     };
 
     const handleTakePicture = async () => {
