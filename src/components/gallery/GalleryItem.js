@@ -18,10 +18,7 @@ function GalleryItem({ item: { src, time, city, country, id } }) {
             )}
             <div className="btn-container">
                 <DeleteButton id={id} />
-
-                <a alt="Download this picture" href={src} download>
-                    <DownloadButton />
-                </a>
+                <DownloadButton src={src} />
             </div>
         </li>
     );
