@@ -9,12 +9,8 @@ export default function RotateCameraBtn({
     setStream,
 }) {
     async function changeFacing() {
-        if (facing === "user") {
-            setFacing("environment");
-        } else {
-            setFacing("user");
-        }
         turnCameraOff();
+        setFacing(facing === "user" ? "environment" : "user");
 
         const currentStream = await turnCameraOn(video, facing);
         if (currentStream) {
